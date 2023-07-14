@@ -22,9 +22,9 @@ https://code.x2go.org/releases/binary-macosx/x2goclient/releases/4.1.2.2/
 
 
 Activate Falcon Agent
-Key: F4BF9189CB9C4CA48982E367D2F819CC-D8
+Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-D8
 Linux command:
-sudo /opt/CrowdStrike/falconctl -s --cid=F4BF9189CB9C4CA48982E367D2F819CC-D8
+sudo /opt/CrowdStrike/falconctl -s --cid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-D8
 systemctl restart falcon-sensor
 systemctl status falcon-sensor
 
