@@ -1,0 +1,15 @@
+Check log:
+tail -f /Library/0Agent/log/application.log
+
+Stop Zero service:
+sudo launchctl unload -w /Library/LaunchDaemons/com.zohocorp.zeroagent.plist
+sudo launchctl stop /Library/LaunchDaemons/com.zohocorp.zeroagent.plist
+
+Download certificate file from zero.zohocorp.com and copy cert file to /Library/0Agent/cert/
+
+Start Zero service:
+sudo launchctl load -w /Library/LaunchDaemons/com.zohocorp.zeroagent.plist
+sudo launchctl kickstart -k system/com.zohocorp.zeroagent
+
+Kill Zero process:
+killall 0Helper
