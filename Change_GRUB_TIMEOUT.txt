@@ -1,15 +1,17 @@
-How to I prevent Ubuntu from kernel version upgrade
-sudo apt-mark hold 4.10.0-27-generic
+Change GRUB_TIMEOUT
+To change the timeout in GRUB, open the /etc/default/grub file:
 
+$ sudo gedit /etc/default/grub
+Comment the GRUB_TIMEOUT_STYLE option and set the GRUB_TIMEOUT:
 
-Change kernel version in ubuntu
+#GRUB_TIMEOUT_STYLE=hidden
+GRUB_TIMEOUT=5
+If you have already tried to change the GRUB_TIMEOUT but this still doesn’t work and the GRUB menu appears on every boot with the 30 second timeout, add the following line at the end of the /etc/default/grub file:
 
-install packages:
-sudo apt install linux-image-5.15.0-73-generic linux-modules-5.15.0-73-generic linux-modules-extra-5.15.0-73-generic linux-headers-5.15.0-73-generic
-
-edit /etc/default/grub as given below:
-vim /etc/default/grub
-GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 5.15.0-73-generic"
+GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
+This sets the GRUB_RECORDFAIL_TIMEOUT to the same value as the GRUB_TIMEOUT.
 
 Generate a new configuration file:
-update-grub
+
+$ sudo update-grub
+Reboot the system to see if the GRUB’s timeout has changed.
