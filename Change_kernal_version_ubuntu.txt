@@ -1,0 +1,15 @@
+How to I prevent Ubuntu from kernel version upgrade
+sudo apt-mark hold 4.10.0-27-generic
+
+
+Change kernel version in ubuntu
+
+install packages:
+sudo apt install linux-image-5.15.0-73-generic linux-modules-5.15.0-73-generic linux-modules-extra-5.15.0-73-generic linux-headers-5.15.0-73-generic
+
+edit /etc/default/grub as given below:
+vim /etc/default/grub
+GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 5.15.0-73-generic"
+
+Generate a new configuration file:
+update-grub
