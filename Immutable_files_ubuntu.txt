@@ -1,0 +1,31 @@
+1. How to add attributes on files to secure from deletion
+------------------------------------------------------------
+
+[root@tecmint tecmint]# chattr +i demo/
+[root@tecmint tecmint]# chattr +i important_file.conf
+
+After setting immutable bit, let’s verify the attribute with command ‘lsattr‘.
+
+[root@tecmint tecmint]# lsattr
+----i----------- ./demo
+----i----------- ./important_file.conf
+
+
+Now, tried to delete forcefully, rename or change the permissions, but it won’t allowed says “Operation not permitted“.
+rm: cannot remove âdemo/â: Operation not permitted
+mv: cannot move âdemo/â to âdemo_alterâ: Operation not permitted
+chmod: changing permissions of âimportant_file.confâ: Operation not permitted
+
+
+2. How to unset attribute on Files
+------------------------------------
+
+[root@tecmint tecmint]# chattr -i demo/ important_file.conf
+
+After resetting permissions, verify the immutable status of files using ‘lsattr‘ command.
+
+[root@tecmint tecmint]# lsattr
+---------------- ./demo
+---------------- ./important_file.conf
+
+You see in the above results that the ‘-i‘ flag removed, that means you can safely remove all the file and folder reside in tecmint folder.
