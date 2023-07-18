@@ -1,5 +1,0 @@
-How to I prevent Ubuntu from kernel version upgrade
------------------------------------------------------
-
-uname -r
-sudo apt-mark hold 4.10.0-27-generic
