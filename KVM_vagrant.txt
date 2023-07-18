@@ -1,9 +1,9 @@
-sudo apt install qemu qemu-kvm libvirt-clients libvirt-daemon-system virtinst bridge-utils -y
+sudo apt install qemu-kvm libvirt-clients libvirt-daemon-system virtinst bridge-utils -y
 sudo systemctl enable libvirtd
 sudo systemctl start libvirtd
 sudo systemctl status libvirtd
-
-sudo apt install qemu libvirt-daemon-system libvirt-clients libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev ruby-libvirt ebtables dnsmasq-base
+sudo apt install vagrant -y
+sudo apt install libvirt-daemon-system libvirt-clients libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev ruby-libvirt ebtables dnsmasq-base
 vagrant plugin install vagrant-libvirt
 vagrant plugin install vagrant-mutate
 
