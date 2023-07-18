@@ -1,5 +1,4 @@
-sudo apt install qemu-kvm libvirt-clients libvirt-daemon-system virtinst bridge-utils -y
-sudo systemctl enable libvirtd
+sudo apt -y install qemu-kvm libvirt-daemon-system libvirt-daemon virtinst bridge-utils libosinfo-binsudo systemctl enable libvirtd
 sudo systemctl start libvirtd
 sudo systemctl status libvirtd
 sudo apt install vagrant -y
