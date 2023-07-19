@@ -1,51 +1,57 @@
 #!/bin/bash
 
-echo "Web deployment."
+#Declaring variables
+Depend="httpd wget curl unzip"
+SERICE_NAME="httpd"
+TMP_FOLDER="/tmp/webfiles"
+SRC_URL="https://www.tooplate.com/zip-templates/2136_kool_form_pack.zip"
+ART_NAME="2136_kool_form_pack"
 
 #Install dependencies
 echo "##########################"
 echo "Installing dependencies."
 echo "##########################"
-sudo yum install httpd wget curl unzip -y
-
+sudo yum install $Depend -y
 
 #Start and enable service
 echo "##########################"
 echo "Starting and enabling service."
 echo "##########################"
-sudo systemctl start httpd
-sudo systemctl enable httpd
+sudo systemctl start $SERICE_NAME
+sudo systemctl enable $SERICE_NAME
 
 #Create temp folder
 echo "##########################"
 echo "Creating folder as temp."
 echo "##########################"
-mkdir -p /tmp/webfiles && cd /tmp/webfiles
+mkdir -p $TMP_FOLDER && cd $TMP_FOLDER
 
 #Download soruce code
 echo "##########################"
 echo "Downloading Source code."
 echo "##########################"
-wget https://www.tooplate.com/zip-templates/2136_kool_form_pack.zip
+wget $SRC_URL
 
 #Extract Source code
 echo "##########################"
 echo "Extracting Source code."
 echo "##########################"
-unzip 2136_kool_form_pack.zip
+unzip $ART_NAME.zip
 
 #Copy files
 echo "##########################"
 echo "Copying source code to webserver!"
 echo "##########################"
-sudo cp -rvf 2136_kool_form_pack/* /var/www/html
+sudo cp -rvf $ART_NAME/* /var/www/html
 
 #Restart services
 echo "##########################"
 echo "Restarting service."
 echo "##########################"
-sudo systemctl restart httpd
+sudo systemctl restart $SERICE_NAME
+
+#Remove tempfolder
+rm -rf $TMP_FOLDER
 
 #show ip address
 ip a
-
