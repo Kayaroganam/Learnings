@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #Declare variable
-ART_NAME="test-server6"
-DIR_PATH="/var/www/test-server6"
+ART_NAME="myfileserver"
+DIR_PATH="/var/www/myfileserver"
 PORT="8888"
 SERVICE_NAME="apache2"
 
@@ -29,7 +29,7 @@ if [ -f /etc/$SERVICE_NAME/.htpasswd ]; then
     fi
 else
     read -p "Username:" USERNAME
-    htpasswd /etc/$SERVICE_NAME/.htpasswd $USERNAME
+    htpasswd -c /etc/$SERVICE_NAME/.htpasswd $USERNAME
 fi
 
 #creating document directory
