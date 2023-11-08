@@ -8,7 +8,7 @@ NetworkManager -V
 ### Answer
 Degrade network-manager version 1.36.6 to 1.36.4.
 
-Purge network-manager.
+Purge network-manager.     
 ```bash
 sudo apt-get purge network-manager
 ```
