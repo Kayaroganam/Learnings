@@ -1,10 +1,6 @@
 #cloud-config
 autoinstall:
   version: 1
-  locale: en_US
-  keyboard:
-    layout: en
-    variant: ''
   storage:
     config:
       - id: disk-nvme0n1
@@ -106,9 +102,3 @@ autoinstall:
     hostname: ubuntu24-img
     username: sysadmin
     password: "$6$MeDi2NdTh5upzTNI$NupTi.G1MXfZtKB5yLmbGKAq3ZC.8FM48sLN3Rysg7wVi5CTQCz6japdxNybPM5zfBJUTQj3aaFwZlA8npOmU."
-    realname: My User
-    groups: [sudo]
-  user-data:
-    timezone: 'Asia/Kolkata'
-    disable_root: false
-
