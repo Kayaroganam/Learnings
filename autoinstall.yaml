@@ -1,0 +1,119 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US
+  keyboard:
+    layout: en
+    variant: ''
+  storage:
+    config:
+      - id: disk-nvme0n1
+        path: /dev/nvme0n1
+        ptable: gpt
+        preserve: false
+        name: ''
+        grub_device: true
+        type: disk
+        wipe: superblock-recursive
+      - id: partition-efi
+        device: disk-nvme0n1
+        size: 512M
+        wipe: superblock
+        flag: boot
+        number: 1
+        preserve: false
+        type: partition
+      - id: partition-boot
+        device: disk-nvme0n1
+        size: 1024M
+        wipe: superblock
+        number: 2
+        preserve: false
+        type: partition
+      - id: partition-root
+        device: disk-nvme0n1
+        size: 50%
+        wipe: superblock
+        number: 3
+        preserve: false
+        type: partition
+      - id: partition-home
+        device: disk-nvme0n1
+        size: -1
+        wipe: superblock
+        number: 4
+        preserve: false
+        type: partition
+      - id: format-efi
+        type: format
+        fstype: fat32
+        volume: partition-efi
+      - id: format-boot
+        type: format
+        fstype: ext4
+        volume: partition-boot
+      - id: format-root
+        type: format
+        fstype: ext4
+        volume: partition-root
+      - id: format-home
+        type: format
+        fstype: ext4
+        volume: partition-home
+      - id: luks-root
+        type: luks
+        volume: partition-root
+        preserve: false
+        key: 'Withckck02'
+      - id: luks-home
+        type: luks
+        volume: partition-home
+        preserve: false
+        key: 'Withckck02'
+      - id: pv-root
+        type: pv
+        volume: luks-root
+      - id: pv-home
+        type: pv
+        volume: luks-home
+      - id: vg-root
+        type: vg
+        devices:
+          - pv-root
+      - id: vg-home
+        type: vg
+        devices:
+          - pv-home
+      - id: lv-root
+        type: lv
+        vg: vg-root
+        name: lv-root
+        size: 50%
+      - id: lv-home
+        type: lv
+        vg: vg-home
+        name: lv-home
+        size: -1
+      - id: format-lv-root
+        type: format
+        fstype: ext4
+        volume: lv-root
+      - id: format-lv-home
+        type: format
+        fstype: ext4
+        volume: lv-home
+  identity:
+    hostname: ubuntu-server
+    username: myuser
+    password: "$6$example$exampleexampleexampleexampleexampleexampleexampleexampleexampleexample"
+    realname: My User
+    groups: [sudo]
+  user-data:
+    timezone: 'Asia/Kolkata'
+    disable_root: false
+  late-commands:
+    - curtin in-target --target=/target -- apt-get -y install vim htop curl
+  packages:
+    - vim
+    - htop
+    - curl
