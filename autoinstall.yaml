@@ -103,17 +103,12 @@ autoinstall:
         fstype: ext4
         volume: lv-home
   identity:
-    hostname: ubuntu-server
-    username: myuser
-    password: "$6$example$exampleexampleexampleexampleexampleexampleexampleexampleexampleexample"
+    hostname: ubuntu24-img
+    username: sysadmin
+    password: "$6$MeDi2NdTh5upzTNI$NupTi.G1MXfZtKB5yLmbGKAq3ZC.8FM48sLN3Rysg7wVi5CTQCz6japdxNybPM5zfBJUTQj3aaFwZlA8npOmU."
     realname: My User
     groups: [sudo]
   user-data:
     timezone: 'Asia/Kolkata'
     disable_root: false
-  late-commands:
-    - curtin in-target --target=/target -- apt-get -y install vim htop curl
-  packages:
-    - vim
-    - htop
-    - curl
+
