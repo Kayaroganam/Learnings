@@ -21,21 +21,21 @@ autoinstall:
         type: partition
       - id: partition-boot
         device: disk-nvme0n1
-        size: 1024M
+        size: 2048M
         wipe: superblock
         number: 2
         preserve: false
         type: partition
       - id: partition-root
         device: disk-nvme0n1
-        size: 50%
+        size: 150GB
         wipe: superblock
         number: 3
         preserve: false
         type: partition
       - id: partition-home
         device: disk-nvme0n1
-        size: -1
+        size: 310GB
         wipe: superblock
         number: 4
         preserve: false
@@ -84,12 +84,12 @@ autoinstall:
         type: lv
         vg: vg-root
         name: lv-root
-        size: 50%
+        size: 100%
       - id: lv-home
         type: lv
         vg: vg-home
         name: lv-home
-        size: -1
+        size: 100%
       - id: format-lv-root
         type: format
         fstype: ext4
