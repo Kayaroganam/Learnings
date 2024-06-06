@@ -2,70 +2,45 @@
 autoinstall:
   version: 1
   identity:
-    hostname: ubuntu-server
-    username: myuser
+    hostname: ubuntu24-img
+    username: sysadmin
     password: $6$MeDi2NdTh5upzTNI$NupTi.G1MXfZtKB5yLmbGKAq3ZC.8FM48sLN3Rysg7wVi5CTQCz6japdxNybPM5zfBJUTQj3aaFwZlA8npOmU.
+
   storage:
     layout:
-      name: custom
+      name: lvm
+      password: Withckck02
     config:
-      - id: disk-nvme0n1
+      - id: disk0
         type: disk
-        match:
-          size: 512000000000
-        device: nvme0n1
-        wipe: superblock-recursive
         ptable: gpt
-        preserve: false
+        path: /dev/nvme0n1
+        wipe: superblock
+
         grub_device: true
-      - id: partition-boot
-        type: partition
-        device: disk-nvme0n1
-        size: 1GB
-        number: 1
-        wipe: superblock-recursive
-        flag: boot
-      - id: partition-root
-        type: partition
-        device: disk-nvme0n1
-        size: 150GB
-        number: 2
-        wipe: superblock-recursive
-      - id: partition-home
-        type: partition
-        device: disk-nvme0n1
-        size: -1  # Use remaining space
-        number: 3
-        wipe: superblock-recursive
-      - id: luks-root
-        type: luks
-        device: partition-root
-        key: $Withckck02
-      - id: luks-home
-        type: luks
-        device: partition-home
-        key: $Withckck02
-      - id: format-root
-        type: format
-        fstype: ext4
-        volume: luks-root
-      - id: format-home
-        type: format
-        fstype: ext4
-        volume: luks-home
-      - id: mount-root
-        type: mount
-        device: format-root
-        path: /
-      - id: mount-home
-        type: mount
-        device: format-home
-        path: /home
-  keyboard:
-    layout: us
-  locale: en_US
-  user-data:
-    apt:
-      primary:
-        - arches: [default]
-          uri: http://archive.ubuntu.com/ubuntu
+        device: /dev/nvme0n1
+
+        partitions:
+          - type: partition
+            id: partition-efi
+            size: 512M
+            flag: boot
+            number: 1
+          - type: partition
+            id: partition-lvm
+            size: 160GB  # Use 160GB space for LVM
+            number: 2
+
+      - id: lvm-group
+        type: lvm_volgroup
+        name: vg0
+        devices:
+          - partition-lvm
+      
+      - id: lvm-root
+        type: lvm_partition
+        size: 100%
+        name: root
+        mount_point: /
+
+
