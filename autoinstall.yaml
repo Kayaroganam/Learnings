@@ -69,12 +69,3 @@ autoinstall:
       primary:
         - arches: [default]
           uri: http://archive.ubuntu.com/ubuntu
-    package_update: true
-    packages:
-      - vim
-      - curl
-      - htop
-  late-commands:
-    - curtin in-target --target=/ apt-get -y install software-properties-common
-    - curtin in-target --target=/ add-apt-repository ppa:deadsnakes/ppa
-    - curtin in-target --target=/ apt-get -y install python3.8
