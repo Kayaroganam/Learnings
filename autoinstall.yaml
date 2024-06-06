@@ -1,104 +1,47 @@
 #cloud-config
 autoinstall:
   version: 1
+  identity:
+    hostname: my-ubuntu-server
+    username: myuser
+    password: "$6$MeDi2NdTh5upzTNI$NupTi.G1MXfZtKB5yLmbGKAq3ZC.8FM48sLN3Rysg7wVi5CTQCz6japdxNybPM5zfBJUTQj3aaFwZlA8npOmU." # Replace with your hashed password
+  keyboard:
+    layout: us
+    variant: ''
+  locale: en_US.UTF-8
   storage:
     config:
-      - id: disk-nvme0n1
-        path: /dev/nvme0n1
-        ptable: gpt
-        preserve: false
-        name: ''
-        grub_device: true
-        type: disk
-        wipe: superblock-recursive
-      - id: partition-efi
-        device: disk-nvme0n1
-        size: 512M
-        wipe: superblock
-        flag: boot
-        number: 1
-        preserve: false
-        type: partition
-      - id: partition-boot
-        device: disk-nvme0n1
-        size: 2048M
-        wipe: superblock
-        number: 2
-        preserve: false
-        type: partition
-      - id: partition-root
-        device: disk-nvme0n1
-        size: 150GB
-        wipe: superblock
-        number: 3
-        preserve: false
-        type: partition
-      - id: partition-home
-        device: disk-nvme0n1
-        size: 300GB
-        wipe: superblock
-        number: 4
-        preserve: false
-        type: partition
-      - id: format-efi
-        type: format
-        fstype: fat32
-        volume: partition-efi
-      - id: format-boot
-        type: format
-        fstype: ext4
-        volume: partition-boot
-      - id: format-root
-        type: format
-        fstype: ext4
-        volume: partition-root
-      - id: format-home
-        type: format
-        fstype: ext4
-        volume: partition-home
-      - id: luks-root
-        type: luks
-        volume: partition-root
-        preserve: false
-        key: 'Withckck02'
-      - id: luks-home
-        type: luks
-        volume: partition-home
-        preserve: false
-        key: 'Withckck02'
-      - id: pv-root
-        type: pv
-        volume: luks-root
-      - id: pv-home
-        type: pv
-        volume: luks-home
-      - id: vg-root
-        type: vg
-        devices:
-          - pv-root
-      - id: vg-home
-        type: vg
-        devices:
-          - pv-home
-      - id: lv-root
-        type: lv
-        vg: vg-root
-        name: lv-root
-        size: 100%
-      - id: lv-home
-        type: lv
-        vg: vg-home
-        name: lv-home
-        size: 100%
-      - id: format-lv-root
-        type: format
-        fstype: ext4
-        volume: lv-root
-      - id: format-lv-home
-        type: format
-        fstype: ext4
-        volume: lv-home
-  identity:
-    hostname: ubuntu24-img
-    username: sysadmin
-    password: "$6$MeDi2NdTh5upzTNI$NupTi.G1MXfZtKB5yLmbGKAq3ZC.8FM48sLN3Rysg7wVi5CTQCz6japdxNybPM5zfBJUTQj3aaFwZlA8npOmU."
+      - { type: disk, id: nvme0n1, ptable: gpt, wipe: superblock-recursive, preserve: false, name: '', grub_device: true, 
+          serial: n/a, path: /dev/nvme0n1 }
+      - { type: partition, id: nvme0n1p1, device: nvme0n1, size: 512M, wipe: superblock, flag: boot, number: 1 }
+      - { type: partition, id: nvme0n1p2, device: nvme0n1, size: 1024M, wipe: superblock, flag: none, number: 2 }
+      - { type: partition, id: nvme0n1p3, device: nvme0n1, size: -1, wipe: superblock, flag: none, number: 3 }
+      - { type: format, id: nvme0n1p1-format, fstype: fat32, volume: nvme0n1p1 }
+      - { type: mount, id: nvme0n1p1-mount, device: nvme0n1p1, path: /boot/efi }
+      - { type: format, id: nvme0n1p2-format, fstype: ext4, volume: nvme0n1p2 }
+      - { type: mount, id: nvme0n1p2-mount, device: nvme0n1p2, path: /boot }
+      - { type: luks, id: luks-nvme0n1p3, key: "mypassword", device: nvme0n1p3 } # Set the encryption password
+      - { type: lvmpv, id: pv-nvme0n1p3, device: luks-nvme0n1p3 }
+      - { type: lvmvolgroup, id: vg0, name: vg0, devices: [pv-nvme0n1p3] }
+      - { type: lvmlv, id: lv-root, name: root, volgroup: vg0, size: 50%FREE }
+      - { type: lvmlv, id: lv-home, name: home, volgroup: vg0, size: 50%FREE }
+      - { type: format, id: lv-root-format, fstype: ext4, volume: lv-root }
+      - { type: mount, id: lv-root-mount, device: lv-root, path: / }
+      - { type: format, id: lv-home-format, fstype: ext4, volume: lv-home }
+      - { type: mount, id: lv-home-mount, device: lv-home, path: /home }
+  packages:
+    - vim
+    - htop
+    - curl
+  user-data:
+    apt:
+      preserve_sources_list: false
+      disable_suites: []
+    package_update: true
+    package_upgrade: true
+    runcmd:
+      - apt-get -y autoremove
+      - apt-get -y clean
+      - echo "Setup complete" > /etc/motd
+  grub:
+    install_devices: ['/dev/nvme0n1']
