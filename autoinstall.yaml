@@ -1,0 +1,80 @@
+#cloud-config
+autoinstall:
+  version: 1
+  identity:
+    hostname: ubuntu-server
+    username: myuser
+    password: $6$rounds=4096$example$examplehashedpassword
+  storage:
+    layout:
+      name: custom
+    config:
+      - id: disk-nvme0n1
+        type: disk
+        match:
+          size: 512000000000
+        device: nvme0n1
+        wipe: superblock-recursive
+        ptable: gpt
+        preserve: false
+        grub_device: true
+      - id: partition-boot
+        type: partition
+        device: disk-nvme0n1
+        size: 1GB
+        number: 1
+        wipe: superblock-recursive
+        flag: boot
+      - id: partition-root
+        type: partition
+        device: disk-nvme0n1
+        size: 150GB
+        number: 2
+        wipe: superblock-recursive
+      - id: partition-home
+        type: partition
+        device: disk-nvme0n1
+        size: -1  # Use remaining space
+        number: 3
+        wipe: superblock-recursive
+      - id: luks-root
+        type: luks
+        device: partition-root
+        key: $Withckck02
+      - id: luks-home
+        type: luks
+        device: partition-home
+        key: $Withckck02
+      - id: format-root
+        type: format
+        fstype: ext4
+        volume: luks-root
+      - id: format-home
+        type: format
+        fstype: ext4
+        volume: luks-home
+      - id: mount-root
+        type: mount
+        device: format-root
+        path: /
+      - id: mount-home
+        type: mount
+        device: format-home
+        path: /home
+  keyboard:
+    layout: us
+  locale: en_US
+  user-data:
+    apt:
+      primary:
+        - arches: [default]
+          uri: http://archive.ubuntu.com/ubuntu
+    package_update: true
+    packages:
+      - vim
+      - curl
+      - htop
+  late-commands:
+    - curtin in-target --target=/ apt-get -y install software-properties-common
+    - curtin in-target --target=/ add-apt-repository ppa:deadsnakes/ppa
+    - curtin in-target --target=/ apt-get -y install python3.8
