@@ -4,7 +4,7 @@ autoinstall:
   identity:
     hostname: ubuntu-server
     username: myuser
-    password: $6$rounds=4096$example$examplehashedpassword
+    password: $6$MeDi2NdTh5upzTNI$NupTi.G1MXfZtKB5yLmbGKAq3ZC.8FM48sLN3Rysg7wVi5CTQCz6japdxNybPM5zfBJUTQj3aaFwZlA8npOmU.
   storage:
     layout:
       name: custom
