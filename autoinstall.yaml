@@ -23,12 +23,12 @@ autoinstall:
         partitions:
           - type: partition
             id: partition-efi
-            size: 512M
+            size: 2GB
             flag: boot
             number: 1
           - type: partition
             id: partition-lvm
-            size: 160GB  # Use 160GB space for LVM
+            size: -1
             number: 2
 
       - id: lvm-group
@@ -39,8 +39,14 @@ autoinstall:
       
       - id: lvm-root
         type: lvm_partition
-        size: 100%
+        size: 160GB
         name: root
         mount_point: /
+      
+      - id: lvm-home
+        type: lvm_partition
+        size: -1
+        name: home
+        mount_point: /home
 
 
